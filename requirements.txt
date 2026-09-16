@@ -1,4 +1,18 @@
+# Full project environment. Keep in sync with pyproject.toml (uv path) — the two
+# must never disagree, or one half of the team silently runs a different stack.
+
+# ---- model / baseline / evaluation ----
 torch
 pytest
 matplotlib
 datasets
+
+# ---- WP0 preprocessing ----
+# Pinned to the exact version the published C1-C5 numbers came from.
+#
+# Why pin an exact version instead of >=: vocabulary training is NOT covered by
+# manifest.json / verify.py (those only hash the parallel corpora, which never touch
+# a tokenizer). If tokenizers changes any UnigramTrainer detail between versions,
+# every teammate silently trains a different vocabulary and the cost metrics stop
+# being comparable — with no error anywhere. 0.22.2 is what the v1 results came from.
+tokenizers==0.22.2

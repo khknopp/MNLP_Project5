@@ -1,0 +1,26 @@
+[project]
+name = "wp0-preprocessing"
+version = "0.1.0"
+description = "WP0: what a jointly learned subword vocabulary costs a low-resource language, and whether it can be recovered"
+requires-python = ">=3.10"
+# Pinned to the exact version that produced the published C1-C5 numbers.
+#
+# Why pin an exact version instead of >=: vocabulary training is NOT covered by
+# manifest.json / verify.py (those only hash the parallel corpora, which never touch
+# a tokenizer). If tokenizers changes any UnigramTrainer detail between versions,
+# every teammate silently trains a different vocabulary and the cost metrics stop
+# being comparable — with no error anywhere. 0.22.2 is what the v1 results came from.
+dependencies = [
+    # model / baseline / evaluation
+    "torch",
+    "pytest",
+    "matplotlib",
+    "datasets",
+    # WP0 preprocessing — see requirements.txt for why this one is pinned exactly
+    "tokenizers==0.22.2",
+]
+
+# This is a directory of scripts, not an installable package — uv should just
+# manage the environment, no build step, no `pip install -e .`.
+[tool.uv]
+package = false
