@@ -41,3 +41,10 @@ __pycache__/
 venv/
 .idea/
 .vscode/
+
+# ---------------------------------------------------------------
+# Local project files
+# ---------------------------------------------------------------
+/MNLP - Project Plan.docx
+/out/nllb_finetuned_no_helpers
+/out/nllb_basemodel
