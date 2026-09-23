@@ -1,50 +1,35 @@
-# ---------------------------------------------------------------
-# Data and artifacts are never committed.
-#
-# Not primarily because of size (though it is ~1GB) — because of the
-# licence. The TED corpus is CC-BY-NC-ND-4.0, and ND forbids
-# distributing derivative works. The unpacked text, the tokenized
-# corpora, and the trained vocabularies (they contain subword strings
-# taken from the corpus) are all derivatives. Do not commit them.
-#
-# How to reproduce instead: everyone downloads TED.tar themselves and
-# re-runs the pipeline, then checks the result against the sha256
-# values in manifest.json — see README "Quick start".
-# ---------------------------------------------------------------
-/data/
-/out/*
+﻿# Local corpus and generated datasets. Keep the reproducibility manifest.
+/data/*
+!/data/processed/
+/data/processed/*
+!/data/processed/parallel/
+/data/processed/parallel/*
+!/data/processed/parallel/manifest.json
 
-# Exception: manifest.json carries only line counts + sha256, no text,
-# so it MUST be committed. git cannot re-include a file inside an
-# excluded directory, hence the layer-by-layer un-ignoring below.
-!/out/parallel
-/out/parallel/*
-!/out/parallel/manifest.json
+# Trained models and tokenizers. Keep the vocabulary construction/hash index.
+/artifacts/*
+!/artifacts/vocabularies/
+/artifacts/vocabularies/*
+!/artifacts/vocabularies/index.json
 
-# Same exception for the vocabulary index. It holds construction args and
-# tokenizer hashes, never any subword strings, so it is not a corpus derivative.
-# It has to be committed for `verify.py --vocabs` to mean anything: the check
-# compares your tokenizer.json against a hash, and without the index on the
-# team's side there is nothing to compare against. The vocabularies themselves
-# stay out — those DO contain subwords taken from the corpus.
-!/out/vocabs
-/out/vocabs/*
-!/out/vocabs/index.json
+# Generated translations, scores, logs and figures.
+/results/
 
-# ---------------------------------------------------------------
-# OS / Python
-# ---------------------------------------------------------------
+# Legacy output locations still used by older scripts/notebooks.
+/out/
+/outputs/
+/outputs.zip
+/ckpt/
+
+# OS / Python / editors
 .DS_Store
 __pycache__/
 *.py[cod]
 .venv/
 venv/
+.ipynb_checkpoints/
 .idea/
 .vscode/
 
-# ---------------------------------------------------------------
 # Local project files
-# ---------------------------------------------------------------
 /MNLP - Project Plan.docx
-/out/nllb_finetuned_no_helpers
-/out/nllb_basemodel
