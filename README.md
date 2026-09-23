@@ -2,6 +2,9 @@
 
 ## Quick start
 
+For step-by-step download, extraction and preprocessing instructions, see the
+[data preparation guide](data/README.md).
+
 **The corpus is not in the repository.** TED is CC-BY-NC-ND-4.0 and ND forbids distributing
 derivative works — the unpacked text, the tokenized corpora and **even the trained
 vocabularies** are all derivatives. So everyone downloads and runs it themselves.
