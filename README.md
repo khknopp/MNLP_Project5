@@ -62,7 +62,7 @@ cells find the repository root, so output paths do not depend on the notebook's
 working directory. The NLLB notebook requires a project checkout, including when
 used in Colab. Start with
 [data overview](notebooks/data_overview.ipynb) for the corpus and
-[NLLB baselines](notebooks/baselines_2_3_off_the_shelf_and_wo_helper.ipynb)
+[NLLB baselines](notebooks/baselines_nllb.ipynb)
 for translation experiments.
 
 Evaluate saved translations with, for example:
