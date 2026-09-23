@@ -1,4 +1,4 @@
-# Local corpus and generated datasets. Keep the reproducibility manifest.
+# Local datasets; keep documentation and the reference manifest.
 /data/*
 !/data/README.md
 !/data/processed/
@@ -7,7 +7,7 @@
 /data/processed/parallel/*
 !/data/processed/parallel/manifest.json
 
-# Trained models and tokenizers. Keep the vocabulary construction/hash index.
+# Generated artifacts; keep the vocabulary index.
 /artifacts/*
 !/artifacts/vocabularies/
 /artifacts/vocabularies/*
