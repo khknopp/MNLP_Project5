@@ -14,7 +14,9 @@
 !/artifacts/vocabularies/index.json
 
 # Generated translations, scores, logs and figures.
-/results/
+/results/figures/*
+/results/metrics/*
+/results/translations/*
 
 # Legacy output locations still used by older scripts/notebooks.
 /out/
