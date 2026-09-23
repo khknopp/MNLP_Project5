@@ -43,8 +43,8 @@ Usage:
     python directionality.py --langs az be
 
 Outputs:
-    out/directionality_report.md   the tables above, ready to paste into the report
-    out/directionality.csv         per variant / language / helper: C3 and its decomposition
+    results/metrics/preprocessing/directionality_report.md   the tables above, ready to paste into the report
+    results/metrics/preprocessing/directionality.csv         per variant / language / helper: C3 and its decomposition
 """
 
 from __future__ import annotations
@@ -57,7 +57,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-# This file lives in preprocessing/ alongside align.py and cost_analysis.py. Put that directory
+# This file lives in src/preprocessing/ alongside align.py and cost_analysis.py. Put that directory
 # on sys.path so the sibling imports below resolve whether this is run as a script or imported
 # from elsewhere — the same reason src/data.py puts the repository root on sys.path.
 _HERE = Path(__file__).resolve().parent
@@ -78,8 +78,8 @@ from cost_analysis import (  # noqa: E402
 
 import align  # noqa: E402  (sibling module, needs the line above)
 
-# This file lives in preprocessing/; data/ and out/ live at the repository root.
-ROOT = _HERE.parent
+# This file lives in src/preprocessing/; data/, artifacts/ and results/ live at the repository root.
+ROOT = _HERE.parent.parent
 
 # Stage directions in TED transcripts. Used only as *evidence of translation*, never as text to
 # train on — so the exact list matters less than it being applied identically to every language.
@@ -102,7 +102,7 @@ def read_lines(p: Path, limit: int = 0) -> list[str]:
 def inheritance_table(split: str, langs: list[str]) -> list[dict]:
     """Stage-direction and speaker-marker inheritance, measured position by position.
 
-    `align.pairs` is used rather than reading `data/processed/`: this check is *about* positions,
+    `align.pairs` is used rather than reading `data/processed/vocab_training/`: this check is *about* positions,
     and processed files have already dropped the blank-line placeholders.
     """
     rows = []
@@ -263,9 +263,9 @@ def fmt(v, nd: int = 3) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-raw", type=Path, default=ROOT / "data" / "raw")
-    ap.add_argument("--data-dir", type=Path, default=ROOT / "data" / "processed")
-    ap.add_argument("--vocab-dir", type=Path, default=ROOT / "out" / "vocabs")
-    ap.add_argument("--out-dir", type=Path, default=ROOT / "out")
+    ap.add_argument("--data-dir", type=Path, default=ROOT / "data" / "processed" / "vocab_training")
+    ap.add_argument("--vocab-dir", type=Path, default=ROOT / "artifacts" / "vocabularies")
+    ap.add_argument("--out-dir", type=Path, default=ROOT / "results" / "metrics" / "preprocessing")
     ap.add_argument("--split", default="train", choices=["train", "dev", "test"],
                     help="inheritance is measured on train: dev/test are far too small for a rate")
     ap.add_argument("--eval-split", default="test",
@@ -275,7 +275,7 @@ def main() -> None:
     ap.add_argument("--affix-lines", type=int, default=50000)
     ap.add_argument("--min-suffix-support", type=int, default=20)
     ap.add_argument("--max-lines", type=int, default=0)
-    ap.add_argument("--cost-csv", type=Path, default=ROOT / "out" / "cost_metrics.csv",
+    ap.add_argument("--cost-csv", type=Path, default=ROOT / "results" / "metrics" / "preprocessing" / "cost_metrics.csv",
                     help="cost_analysis.py's output, used to confirm C3 here means the same thing")
     args = ap.parse_args()
 

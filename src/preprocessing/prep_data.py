@@ -9,7 +9,7 @@ Why unpack it ourselves instead of using load_dataset:
   Reading the text straight from the tar is the most controllable option.
 
 Usage: python prep_data.py
-Output: data/processed/{lang}.{train,dev,test}.txt  +  data/processed/SIZES.md
+Output: data/processed/vocab_training/{lang}.{train,dev,test}.txt  +  data/processed/vocab_training/SIZES.md
 """
 from __future__ import annotations
 
@@ -26,9 +26,9 @@ EXPECT = {"az": {"train": 5946, "dev": 671, "test": 903},
 
 
 def main() -> None:
-    root = Path(__file__).resolve().parent.parent
+    root = Path(__file__).resolve().parents[2]
     tar_path = root / "data" / "TED.tar"
-    out = root / "data" / "processed"
+    out = root / "data" / "processed" / "vocab_training"
     out.mkdir(parents=True, exist_ok=True)
 
     rows: list[tuple[str, str, int, str]] = []

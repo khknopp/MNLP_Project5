@@ -48,7 +48,7 @@ import argparse
 import random
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 
 
 # ------------------------------------------------------------------ core formula
@@ -157,7 +157,7 @@ def _parse_sizes(pairs: list[str]) -> dict[str, int]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--data-dir", type=Path, default=ROOT / "data" / "processed")
+    ap.add_argument("--data-dir", type=Path, default=ROOT / "data" / "processed" / "vocab_training")
     ap.add_argument("--split", default="train")
     ap.add_argument("--sizes", nargs="*", default=None, help="e.g. az=5946 be=4509 ... (defaults to reading the corpus)")
     ap.add_argument("--alphas", nargs="*", type=float, default=[0.2, 0.5, 0.8, 1.0])

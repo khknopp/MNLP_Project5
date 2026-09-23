@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """Segment the corpus with the WP0 vocabularies — downstream can consume it directly.
 
-**Why this step exists.** `out/vocabs/*/tokenizer.json` only ships the vocabulary;
+**Why this step exists.** `artifacts/vocabularies/*/tokenizer.json` only ships the vocabulary;
 whoever picks it up still has to decide which pre-tokenizer to use, whether to
 prepend, where the special tokens go. Get any of that wrong and your segmentation
 no longer matches the WP0 cost metrics — **and it fails silently**, quietly making
 BLEU scores incomparable. So the tokenized corpus ships as an artifact too.
 
 Output (one directory per vocabulary variant):
-    out/tokenized/{tag}/{lang}.{split}.tok      space-separated pieces (fairseq convention)
-    out/tokenized/{tag}/{lang}.{split}.ids      ⟨optional, --ids⟩ token ids
-    out/tokenized/manifest.json                 line counts + sha256 + vocab tag + settings
+    data/processed/tokenized/{tag}/{lang}.{split}.tok      space-separated pieces (fairseq convention)
+    data/processed/tokenized/{tag}/{lang}.{split}.ids      ⟨optional, --ids⟩ token ids
+    data/processed/tokenized/manifest.json                 line counts + sha256 + vocab tag + settings
 
 WARNING: the output is a derivative of the corpus (CC-BY-NC-ND-4.0) and is
 **also never committed** — everyone generates it locally.
@@ -32,7 +32,7 @@ from pathlib import Path
 
 from tokenizers import Tokenizer
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 
 LANGS = ["en", "az", "be", "tr", "uk", "ru"]
 SPLITS = ["train", "dev", "test"]
@@ -62,9 +62,9 @@ def tokenize_file(tok: Tokenizer, src: Path, dst_tok: Path, dst_ids: Path | None
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--data-dir", type=Path, default=ROOT / "data" / "processed")
-    ap.add_argument("--vocab-dir", type=Path, default=ROOT / "out" / "vocabs")
-    ap.add_argument("--out-dir", type=Path, default=ROOT / "out" / "tokenized")
+    ap.add_argument("--data-dir", type=Path, default=ROOT / "data" / "processed" / "vocab_training")
+    ap.add_argument("--vocab-dir", type=Path, default=ROOT / "artifacts" / "vocabularies")
+    ap.add_argument("--out-dir", type=Path, default=ROOT / "data" / "processed" / "tokenized")
     ap.add_argument("--variants", nargs="*", default=["V3_8000_unigram"],
                     help="release variant V3_8000_unigram by default; use others only for ablations")
     ap.add_argument("--langs", nargs="*", default=LANGS)
@@ -118,7 +118,7 @@ def main() -> None:
         manifest["variants"][tag] = entry
 
     if not manifest["variants"]:
-        raise SystemExit("No variant was processed — check --variants and out/vocabs/")
+        raise SystemExit("No variant was processed — check --variants and artifacts/vocabularies/")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     (args.out_dir / "manifest.json").write_text(

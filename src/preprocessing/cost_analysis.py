@@ -32,8 +32,8 @@ Usage:
     python cost_analysis.py --min-suffix-support 50   # stricter definition of "productive affix"
 
 Outputs:
-    out/cost_metrics.csv     the full C1–C6 table
-    out/cost_report.md       markdown table + worked examples (paste straight into the report)
+    results/metrics/preprocessing/cost_metrics.csv     the full C1–C6 table
+    results/metrics/preprocessing/cost_report.md       markdown table + worked examples (paste straight into the report)
 """
 from __future__ import annotations
 
@@ -245,11 +245,11 @@ def classify_piece(p: str, marker: str, support: Counter, min_support: int) -> s
 
 # ------------------------------------------------------------ main flow
 def main() -> None:
-    root = Path(__file__).resolve().parent.parent
+    root = Path(__file__).resolve().parents[2]
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", type=Path, default=root / "data" / "processed")
-    ap.add_argument("--vocab-dir", type=Path, default=root / "out" / "vocabs")
-    ap.add_argument("--out-dir", type=Path, default=root / "out")
+    ap.add_argument("--data-dir", type=Path, default=root / "data" / "processed" / "vocab_training")
+    ap.add_argument("--vocab-dir", type=Path, default=root / "artifacts" / "vocabularies")
+    ap.add_argument("--out-dir", type=Path, default=root / "results" / "metrics" / "preprocessing")
     ap.add_argument("--variants", nargs="*", default=None)
     ap.add_argument("--split", default="test", choices=["dev", "test"])
     ap.add_argument("--max-lines", type=int, default=0, help="0=all lines; cap it when debugging")
@@ -531,7 +531,7 @@ def main() -> None:
            "> ⚠️ **And C5 is the one metric whose value depends on how the corpus is sampled** — the",
            "> same quantity reads 8.0% / 1.5% / 0.43% for equal-line-count, 20k-line and whole-corpus",
            "> sampling (V3/az). Only the whole-corpus reading is stable, and it is the default.",
-           "> **Never quote a C5 number without its protocol.** See `out/sensitivity.md`.", ""]
+           "> **Never quote a C5 number without its protocol.** See `results/metrics/preprocessing/sensitivity.md`.", ""]
 
     # ---- C6: the reading data_overview.ipynb §7 asks for. C3 alone cannot tell "the shared pieces carry
     # morphology" apart from "the shared pieces are punctuation" — both score well on C3.

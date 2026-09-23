@@ -148,11 +148,11 @@ class EvaluationTests(unittest.TestCase):
                     evaluation.load_metric(name)
 
     def test_saved_baseline_scores(self):
-        folders = [evaluation.ROOT / "out" / name for name in ("nllb_basemodel", "nllb_finetuned_no_helpers")]
+        folders = [evaluation.ROOT / "results" / "translations" / name for name in ("nllb_basemodel", "nllb_finetuned_no_helpers")]
         if not all((folder / "en-be.hyp").is_file() for folder in folders):
             self.skipTest("Local baseline artifacts are unavailable")
         for folder in folders:
-            metadata = folder / ("scores.json" if folder.name == "nllb_basemodel" else "run_info.json")
+            metadata = evaluation.ROOT / "results" / "metrics" / folder.name / ("scores.json" if folder.name == "nllb_basemodel" else "run_info.json")
             expected = json.loads(metadata.read_text(encoding="utf-8"))
             if folder.name != "nllb_basemodel":
                 expected = expected["test_scores"]

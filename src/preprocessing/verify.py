@@ -11,10 +11,10 @@ If anyone changes the split / dedup / filtering strategy without updating the
 manifest, this goes red immediately.
 
 Usage:
-    python verify.py                          # check out/parallel/
-    python verify.py --dir out/parallel
-    python verify.py --manifest out/parallel/manifest.json --dir out/parallel
-    python verify.py --vocabs                 # check out/vocabs/ against out/vocabs/index.json
+    python verify.py                          # check data/processed/parallel/
+    python verify.py --dir data/processed/parallel
+    python verify.py --manifest data/processed/parallel/manifest.json --dir data/processed/parallel
+    python verify.py --vocabs                 # check artifacts/vocabularies/ against artifacts/vocabularies/index.json
 
 Exit code: 0 = all match; 1 = mismatch (every offending file is listed).
 """
@@ -27,7 +27,7 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def sha256_16(p: Path) -> str:
@@ -51,7 +51,7 @@ def count_lines(p: Path) -> int:
 
 
 def verify_vocabs(index_path: Path, base: Path, quiet: bool) -> int:
-    """Check every vocabulary against the hash recorded in `out/vocabs/index.json`.
+    """Check every vocabulary against the hash recorded in `artifacts/vocabularies/index.json`.
 
     This is a *different* kind of check from the parallel-corpus one, and both are needed:
     that one is about the **data**, this one is about the **segmentation**. Two people can
@@ -120,12 +120,12 @@ def verify_vocabs(index_path: Path, base: Path, quiet: bool) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--manifest", type=Path, default=ROOT / "out" / "parallel" / "manifest.json")
+    ap.add_argument("--manifest", type=Path, default=ROOT / "data" / "processed" / "parallel" / "manifest.json")
     ap.add_argument("--dir", type=Path, default=None, help="artifact directory (defaults to the manifest's own directory)")
     ap.add_argument("--quiet", action="store_true", help="only print problems")
     ap.add_argument("--vocabs", action="store_true",
-                    help="check out/vocabs/ against out/vocabs/index.json instead of the parallel corpora")
-    ap.add_argument("--vocab-index", type=Path, default=ROOT / "out" / "vocabs" / "index.json")
+                    help="check artifacts/vocabularies/ against artifacts/vocabularies/index.json instead of the parallel corpora")
+    ap.add_argument("--vocab-index", type=Path, default=ROOT / "artifacts" / "vocabularies" / "index.json")
     args = ap.parse_args()
 
     if args.vocabs:

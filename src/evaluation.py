@@ -1,4 +1,4 @@
-﻿"""
+"""
 evaluation.py - Evaluate saved translations with BLEU, chrF or COMET.
 
 Import evaluate_direction or evaluate_all_directions into a notebook to score
@@ -324,7 +324,7 @@ def evaluate_all_directions(
         ImportError: If a required metric package is unavailable when loading.
 
     Example:
-        results = evaluate_all_directions("out/nllb_basemodel", "bleu")
+        results = evaluate_all_directions("results/translations/nllb_basemodel", "bleu")
         english_to_belarusian = results["en-be"]["score"]
     """
     metric_name = _validate_metric(metric_name)

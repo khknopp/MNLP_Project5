@@ -21,17 +21,53 @@ make all        # falls back to plain python3
 
 ## Directory
 
-```
+```text
 MNLP_Project5/
-├── README.md              <- this file: setup only
-├── Makefile               <- one command end to end: make all / make verify / make directionality
-├── requirements.txt       <- full project environment; mirrors pyproject.toml
-├── pyproject.toml         <- the same dependencies for the uv path; pins tokenizers exactly
-├── preprocessing/         <- WP0 scripts — what each does: data_overview.ipynb, "Where everything lives"
-├── src/                   <- model code (Kai): data.py, model.py
-├── notebooks/
-│   ├── data_overview.ipynb                    <- START HERE: the data, the design, the results, the open decisions
-│   ├── test_basic_model.ipynb                 <- Kai's smoke test
-│   └── baselines_2_3_off_the_shelf_and_wo_helper.ipynb   <- Pinar's NLLB baselines
-├── data/                  <- TED.tar + raw/ + processed/ (not committed, CC-BY-NC-ND)
-└── out/                   <- artifacts; only parallel/manifest.json and vocabs/index.json are committed
+|-- notebooks/                 # Experiment workflows and data exploration
+|-- src/
+|   |-- data.py                # Load aligned language pairs
+|   |-- model.py               # Basic translation model
+|   |-- evaluation.py          # BLEU, chrF and COMET evaluation
+|   `-- preprocessing/         # Data preparation, vocabulary training and analyses
+|-- data/
+|   |-- TED.tar                # Downloaded corpus
+|   |-- raw/                   # Extracted corpus with alignment preserved
+|   `-- processed/
+|       |-- parallel/          # Aligned pairs and tracked manifest.json
+|       |-- pivot/             # Aligned triples
+|       |-- vocab_training/    # Non-empty text for vocabulary training only
+|       |-- tokenized/         # Tokenized corpora
+|       `-- nllb/              # NLLB notebook train/dev/test JSONL files
+|-- artifacts/
+|   |-- vocabularies/          # Tokenizers and tracked index.json
+|   `-- checkpoints/           # Saved model checkpoints
+|-- results/
+|   |-- translations/<system>/ # Matching .src, .ref and .hyp files
+|   |-- metrics/<system>/      # Scores, run metadata and training logs
+|   |-- metrics/preprocessing/ # Vocabulary/corpus analysis reports
+|   `-- figures/<system>/      # Plots
+|-- tests/                     # Code checks
+`-- Makefile                   # Preprocessing pipeline
+```
+
+`make all` runs preprocessing, not model training. Generated data, artifacts and
+results are ignored by Git; the parallel manifest and vocabulary index are tracked.
+`make clean` removes generated preprocessing data and tokenizers while preserving
+those two metadata files, the downloaded archive, checkpoints and results.
+
+### Start exploring
+
+Open notebooks from the repository root or its `notebooks/` folder. Their setup
+cells find the repository root, so output paths do not depend on the notebook's
+working directory. The NLLB notebook requires a project checkout, including when
+used in Colab. Start with
+[data overview](notebooks/data_overview.ipynb) for the corpus and
+[NLLB baselines](notebooks/baselines_2_3_off_the_shelf_and_wo_helper.ipynb)
+for translation experiments.
+
+Evaluate saved translations with, for example:
+
+```python
+from src.evaluation import evaluate_all_directions
+scores = evaluate_all_directions("results/translations/nllb_basemodel", "bleu")
+```

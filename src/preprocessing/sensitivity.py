@@ -29,7 +29,7 @@ Usage:
     python sensitivity.py --keep-run-dir  # do not delete the per-config outputs
 
 Outputs:
-    out/sensitivity.md   every swept quantity, with a verdict per setting
+    results/metrics/preprocessing/sensitivity.md   every swept quantity, with a verdict per setting
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 COST = Path(__file__).resolve().parent / "cost_analysis.py"
 
 # The variants that carry the conclusions. Sweeping all 14 would multiply the runtime by three
@@ -59,8 +59,8 @@ FAST_ALLOC = "0.02"
 
 def run_cost(out_dir: Path, extra: list[str], forward: list[str]) -> dict[tuple[str, str], dict]:
     """Run the real cost_analysis.py. `forward` carries --data-dir/--vocab-dir when the artifacts
-    do not sit next to the repository root (they never do — `out/` is gitignored, so a fresh clone
-    has `out/vocabs/index.json` and nothing else)."""
+    do not sit next to the repository root (they never do — generated artifacts are gitignored, so a fresh clone
+    has `artifacts/vocabularies/index.json` and nothing else)."""
     cmd = [sys.executable, str(COST),
            "--out-dir", str(out_dir),
            "--variants", *KEY_VARIANTS,
@@ -166,7 +166,7 @@ def fmt(v, pct: bool = False) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out-dir", type=Path, default=ROOT / "out")
+    ap.add_argument("--out-dir", type=Path, default=ROOT / "results" / "metrics" / "preprocessing")
     ap.add_argument("--data-dir", type=Path, default=None, help="forwarded to cost_analysis.py")
     ap.add_argument("--vocab-dir", type=Path, default=None, help="forwarded to cost_analysis.py")
     ap.add_argument("--quick", action="store_true", help="run a reduced grid as a smoke test")

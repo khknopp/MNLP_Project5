@@ -11,8 +11,8 @@ Usage:
     python train_vocabs.py --vocab-size 8000 --alphas 0.2 0.5 0.8
     python train_vocabs.py --rehash                          # no training: (re)record the hashes of existing artifacts
 
-Output: out/vocabs/<variant>_<size>[_<suffix>]/tokenizer.json
-      plus out/vocabs/index.json (records the exact construction args of every variant, for cost_analysis to reproduce)
+Output: artifacts/vocabularies/<variant>_<size>[_<suffix>]/tokenizer.json
+      plus artifacts/vocabularies/index.json (records the exact construction args of every variant, for cost_analysis to reproduce)
 
 **Why every entry also carries `tokenizer_sha256_16`.** `manifest.json` / `verify.py` hash only the
 parallel corpora, which never touch a tokenizer — so vocabulary training and the C1–C5 numbers are
@@ -165,7 +165,7 @@ def rehash(out_dir: Path, index: dict[str, dict], idx_path: Path) -> None:
 
     Trains nothing and changes no vocabulary. A `tokenizer.json` already on disk has a hash
     as a matter of fact — this just writes it down, so that `verify.py --vocabs` has something
-    to check a teammate's copy against. Run it once on an existing `out/vocabs/`.
+    to check a teammate's copy against. Run it once on an existing `artifacts/vocabularies/`.
     """
     recorded = already = 0
     for tag in sorted(index):
@@ -200,9 +200,9 @@ def rehash(out_dir: Path, index: dict[str, dict], idx_path: Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    root = Path(__file__).resolve().parent.parent
-    ap.add_argument("--data-dir", type=Path, default=root / "data" / "processed")
-    ap.add_argument("--out-dir", type=Path, default=root / "out" / "vocabs")
+    root = Path(__file__).resolve().parents[2]
+    ap.add_argument("--data-dir", type=Path, default=root / "data" / "processed" / "vocab_training")
+    ap.add_argument("--out-dir", type=Path, default=root / "artifacts" / "vocabularies")
     ap.add_argument("--vocab-size", type=int, default=8000)
     ap.add_argument("--model", choices=["unigram", "bpe"], default="unigram")
     ap.add_argument("--variants", nargs="*", default=["V1_az", "V1_be", "V2", "V3", "V5", "V4"],

@@ -7,7 +7,7 @@
 | source | `data/raw/` + `align.py` | HuggingFace hub, streamed |
 | needs a local `TED.tar` (673 MB) | yes | **no** |
 | returns position numbers | **yes** | no |
-| joinable to `out/parallel/` and the pivot triples | **yes** | no |
+| joinable to `data/processed/parallel/` and the pivot triples | **yes** | no |
 | hashed / checkable with `verify.py` | **yes** | no |
 | use it for | **anything that ends up in the report** | poking at the data, smoke tests |
 
@@ -33,10 +33,10 @@ from pathlib import Path
 
 from datasets import load_dataset
 
-# align.py lives in preprocessing/, a sibling of src/. Put that directory on sys.path rather
+# align.py lives in src/preprocessing/. Put that directory on sys.path rather
 # than using a relative import, so this works whether the caller was started from the repo
 # root, from src/, from preprocessing/, or from a notebook.
-_PREP = Path(__file__).resolve().parent.parent / "preprocessing"
+_PREP = Path(__file__).resolve().parent / "preprocessing"
 if str(_PREP) not in sys.path:
     sys.path.insert(0, str(_PREP))
 
@@ -49,7 +49,7 @@ def get_language_pairs(split: str, src: str, tgt: str) -> list[tuple[int, str, s
 
     `split` is one of `train` / `dev` / `test`. The position number is the raw line number in
     `data/raw/`, and it is the whole point of using this path: it lets a pair be joined to the
-    pivot triples and to the frozen `out/parallel/` artifacts, which carry a sha256 in
+    pivot triples and to the frozen `data/processed/parallel/` artifacts, which carry a sha256 in
     `manifest.json` that `verify.py` can check.
 
     Raises `SystemExit` (from align.py) if `data/raw/` is missing — run `python align.py extract`

@@ -19,8 +19,8 @@ Command line:
     python align.py extract                       # tar → data/raw/ (empty lines preserved)
     python align.py counts                        # real sentence-pair counts per language pair
     python align.py check                         # leakage / duplicate checks
-    python align.py emit --pairs az-en be-en --out out/parallel
-    python align.py pivot --out out/pivot         # az-tr-en / be-uk-en / be-ru-en triples
+    python align.py emit --pairs az-en be-en --out data/processed/parallel
+    python align.py pivot --out data/processed/pivot         # az-tr-en / be-uk-en / be-ru-en triples
 """
 from __future__ import annotations
 
@@ -32,9 +32,9 @@ from datetime import datetime, timezone
 from itertools import product
 from pathlib import Path
 
-# This file lives in preprocessing/; data/ and out/ live at the repository root,
+# This file lives in src/preprocessing/; data/, artifacts/ and results/ live at the repository root,
 # so that every script resolves them the same way no matter where it is invoked from.
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 TAR = ROOT / "data" / "TED.tar"
 RAW = ROOT / "data" / "raw"
 
@@ -237,10 +237,10 @@ def main() -> None:
     m = sub.add_parser("emit", help="write the parallel corpus + manifest to disk")
     m.add_argument("--pairs", nargs="*", default=[f"{a}-{b}" for a, b in DELIVER_PAIRS])
     m.add_argument("--splits", nargs="*", default=["train", "dev", "test"])
-    m.add_argument("--out", type=Path, default=ROOT / "out" / "parallel")
+    m.add_argument("--out", type=Path, default=ROOT / "data" / "processed" / "parallel")
 
     p = sub.add_parser("pivot", help="write the pivot triples to disk")
-    p.add_argument("--out", type=Path, default=ROOT / "out" / "pivot")
+    p.add_argument("--out", type=Path, default=ROOT / "data" / "processed" / "pivot")
 
     args = ap.parse_args()
     if args.cmd == "extract":
