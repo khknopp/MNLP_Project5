@@ -45,7 +45,7 @@ def main() -> None:
                     continue
                 lines = [ln.strip() for ln in f.read().decode("utf-8", "replace").splitlines()]
                 lines = [ln for ln in lines if ln]          # drop blank lines — matches the convention used before
-                (out / f"{lang}.{split}.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+                (out / f"{lang}.{split}.txt").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
                 rows.append((lang, split, len(lines), member))
                 print(f"  {lang}.{split:5s} {len(lines):>8,} lines")
 
@@ -64,7 +64,7 @@ def main() -> None:
             ok = False
         md.append(f"- {flag} {lang}.{sp}: unpacked {got:,} / baseline {exp:,}")
     md += ["", "All matched ✅" if ok else "**Mismatch — the extraction convention needs to be checked**"]
-    (out / "SIZES.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    (out / "SIZES.md").write_text("\n".join(md) + "\n", encoding="utf-8", newline="\n")
 
     print("\n" + "\n".join(md[md.index("## Self-check"):]))
     print(f"\n→ {out}/SIZES.md")

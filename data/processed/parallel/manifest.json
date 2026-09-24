@@ -1,331 +1,331 @@
 {
-  "generated_at": "2026-09-23T06:48:18+00:00",
+  "generated_at": "2026-09-15T22:10:41+00:00",
   "source": "data/TED.tar (davidstap/ted_talks, CC-BY-NC-ND-4.0)",
   "alignment": "Strictly aligned by line number, empty lines are placeholders; this artifact contains only positions where both columns are non-empty",
   "files": {
     "az-en.train.az": {
       "lines": 5946,
-      "sha256_16": "cd8381c876f2a798"
+      "sha256_16": "fa7afb0ed05be7cb"
     },
     "az-en.train.en": {
       "lines": 5946,
-      "sha256_16": "edfe45aec7ea6f4c"
+      "sha256_16": "2e283b35ed0d54c8"
     },
     "az-en.train.pos": {
       "lines": 5946,
-      "sha256_16": "704093b261ff9edf"
+      "sha256_16": "432151ced47894d4"
     },
     "be-en.train.be": {
       "lines": 4509,
-      "sha256_16": "4fa71de14671b794"
+      "sha256_16": "45ff9fd28d5df32e"
     },
     "be-en.train.en": {
       "lines": 4509,
-      "sha256_16": "ff763f20012583b7"
+      "sha256_16": "79a9a4925faee2d3"
     },
     "be-en.train.pos": {
       "lines": 4509,
-      "sha256_16": "c166d7c5119e66cd"
+      "sha256_16": "a9b9c8097ddb4c95"
     },
     "tr-en.train.tr": {
       "lines": 182470,
-      "sha256_16": "8460905c325ee3ae"
+      "sha256_16": "a2bfab480cb20019"
     },
     "tr-en.train.en": {
       "lines": 182470,
-      "sha256_16": "76c4f0259db70d87"
+      "sha256_16": "9ef9fa16ba04676c"
     },
     "tr-en.train.pos": {
       "lines": 182470,
-      "sha256_16": "6b275496d4631544"
+      "sha256_16": "c36631e1a6864210"
     },
     "uk-en.train.uk": {
       "lines": 108495,
-      "sha256_16": "aa2134cdc28e681a"
+      "sha256_16": "4366479fc0f899f6"
     },
     "uk-en.train.en": {
       "lines": 108495,
-      "sha256_16": "51f22489cf92e8bf"
+      "sha256_16": "5e65f6240202fe66"
     },
     "uk-en.train.pos": {
       "lines": 108495,
-      "sha256_16": "f26808f5fab2714b"
+      "sha256_16": "71bbb2837953a572"
     },
     "ru-en.train.ru": {
       "lines": 208458,
-      "sha256_16": "245c807dc05171be"
+      "sha256_16": "56ce2550c72c7796"
     },
     "ru-en.train.en": {
       "lines": 208458,
-      "sha256_16": "6bf4d91389f5789b"
+      "sha256_16": "d6f094cc0326233e"
     },
     "ru-en.train.pos": {
       "lines": 208458,
-      "sha256_16": "cdccf4c8b696da80"
+      "sha256_16": "460da3da7a694462"
     },
     "be-uk.train.be": {
       "lines": 3253,
-      "sha256_16": "f27062ad423a738d"
+      "sha256_16": "c7575f7e2b3a641b"
     },
     "be-uk.train.uk": {
       "lines": 3253,
-      "sha256_16": "f983a90980e35503"
+      "sha256_16": "ee863c698e390e96"
     },
     "be-uk.train.pos": {
       "lines": 3253,
-      "sha256_16": "56574e56ebff2969"
+      "sha256_16": "c53293f4105aacf5"
     },
     "be-ru.train.be": {
       "lines": 3855,
-      "sha256_16": "c74e72bbd10c9503"
+      "sha256_16": "77239a52836f2105"
     },
     "be-ru.train.ru": {
       "lines": 3855,
-      "sha256_16": "58f996ba8b9cc53f"
+      "sha256_16": "2dcb328eeb916321"
     },
     "be-ru.train.pos": {
       "lines": 3855,
-      "sha256_16": "4e44abd8a8f10212"
+      "sha256_16": "04c287ea92bc0890"
     },
     "az-tr.train.az": {
       "lines": 5585,
-      "sha256_16": "2ed1cbd6cfd0ec7c"
+      "sha256_16": "b25d2a829b560f7f"
     },
     "az-tr.train.tr": {
       "lines": 5585,
-      "sha256_16": "4ef9d6201a9268dd"
+      "sha256_16": "0c93f906137cdc80"
     },
     "az-tr.train.pos": {
       "lines": 5585,
-      "sha256_16": "e9f8120312564350"
+      "sha256_16": "7763df3f36326021"
     },
     "az-be.train.az": {
       "lines": 310,
-      "sha256_16": "1abb65733e564575"
+      "sha256_16": "d6d4fb1b65f0c8b5"
     },
     "az-be.train.be": {
       "lines": 310,
-      "sha256_16": "2bfb2e1db8106807"
+      "sha256_16": "b47191f75f2ec3f3"
     },
     "az-be.train.pos": {
       "lines": 310,
-      "sha256_16": "31731a29c93d81b1"
+      "sha256_16": "a00e28435be91cfb"
     },
     "az-en.dev.az": {
       "lines": 671,
-      "sha256_16": "fd88c57ffeca618a"
+      "sha256_16": "58fa9394f894bcdc"
     },
     "az-en.dev.en": {
       "lines": 671,
-      "sha256_16": "2d5e4ddd661a1afb"
+      "sha256_16": "b7afb31b41cedd87"
     },
     "az-en.dev.pos": {
       "lines": 671,
-      "sha256_16": "a251a6d61ab2ccc0"
+      "sha256_16": "cac0d68c70828cef"
     },
     "be-en.dev.be": {
       "lines": 248,
-      "sha256_16": "a52d8b6121e2954f"
+      "sha256_16": "0d77468059be4622"
     },
     "be-en.dev.en": {
       "lines": 248,
-      "sha256_16": "958a57136d1e0943"
+      "sha256_16": "a03f542a66538583"
     },
     "be-en.dev.pos": {
       "lines": 248,
-      "sha256_16": "cf3060d791be6955"
+      "sha256_16": "6533650915904456"
     },
     "tr-en.dev.tr": {
       "lines": 4045,
-      "sha256_16": "16ec0e415729b4ec"
+      "sha256_16": "f94d4312e16f2c30"
     },
     "tr-en.dev.en": {
       "lines": 4045,
-      "sha256_16": "b0d1892848daf92a"
+      "sha256_16": "13b364b3510a6e72"
     },
     "tr-en.dev.pos": {
       "lines": 4045,
-      "sha256_16": "a78cfe3ca32aabf7"
+      "sha256_16": "ac7bc0d8c3242dd8"
     },
     "uk-en.dev.uk": {
       "lines": 3060,
-      "sha256_16": "be784d9e54ff7998"
+      "sha256_16": "b15b2d738e511e6c"
     },
     "uk-en.dev.en": {
       "lines": 3060,
-      "sha256_16": "afb207441c490755"
+      "sha256_16": "28376b354742db87"
     },
     "uk-en.dev.pos": {
       "lines": 3060,
-      "sha256_16": "c7b0b81f00b3cbcc"
+      "sha256_16": "745ce32be49d5f57"
     },
     "ru-en.dev.ru": {
       "lines": 4814,
-      "sha256_16": "e933471562e3bc11"
+      "sha256_16": "07635ba659293013"
     },
     "ru-en.dev.en": {
       "lines": 4814,
-      "sha256_16": "9f7177d93c4e5dd0"
+      "sha256_16": "eea3d916b9eee6f3"
     },
     "ru-en.dev.pos": {
       "lines": 4814,
-      "sha256_16": "9abb21d9c8e4166e"
+      "sha256_16": "4276db8aeef410c0"
     },
     "be-uk.dev.be": {
       "lines": 247,
-      "sha256_16": "96d0d6f479c115c5"
+      "sha256_16": "b9a676929b4139d6"
     },
     "be-uk.dev.uk": {
       "lines": 247,
-      "sha256_16": "53d84989ae5644bb"
+      "sha256_16": "3eb96d280077d692"
     },
     "be-uk.dev.pos": {
       "lines": 247,
-      "sha256_16": "f879004e220eff4a"
+      "sha256_16": "cc58f3928a95d140"
     },
     "be-ru.dev.be": {
       "lines": 241,
-      "sha256_16": "203c0873ff7f02a3"
+      "sha256_16": "797dffdaf2b41177"
     },
     "be-ru.dev.ru": {
       "lines": 241,
-      "sha256_16": "b550a9d3bc7850bf"
+      "sha256_16": "b8cc0a94cf12b8b6"
     },
     "be-ru.dev.pos": {
       "lines": 241,
-      "sha256_16": "5dff0c78ff67063f"
+      "sha256_16": "820c8313dff31e4d"
     },
     "az-tr.dev.az": {
       "lines": 490,
-      "sha256_16": "db2f84af215a113e"
+      "sha256_16": "b85b9a2da93a3952"
     },
     "az-tr.dev.tr": {
       "lines": 490,
-      "sha256_16": "6c75469697953021"
+      "sha256_16": "6debd60dec8d911b"
     },
     "az-tr.dev.pos": {
       "lines": 490,
-      "sha256_16": "9c8775b371563530"
+      "sha256_16": "fe299199df3e7c45"
     },
     "az-be.dev.az": {
       "lines": 23,
-      "sha256_16": "8ee33e7efa0d4281"
+      "sha256_16": "c68f935644ff9b1e"
     },
     "az-be.dev.be": {
       "lines": 23,
-      "sha256_16": "d89591d8e7980d1f"
+      "sha256_16": "90cfa411347e1c7a"
     },
     "az-be.dev.pos": {
       "lines": 23,
-      "sha256_16": "5299f736f592c578"
+      "sha256_16": "3f516cccc77cf53e"
     },
     "az-en.test.az": {
       "lines": 903,
-      "sha256_16": "f8a96dc69c84518c"
+      "sha256_16": "94d21693dd9d5af9"
     },
     "az-en.test.en": {
       "lines": 903,
-      "sha256_16": "5b0af6dce902752d"
+      "sha256_16": "9e8503007fcb29f7"
     },
     "az-en.test.pos": {
       "lines": 903,
-      "sha256_16": "4181c5fe2c7edc7a"
+      "sha256_16": "f4e134c73ce8c710"
     },
     "be-en.test.be": {
       "lines": 664,
-      "sha256_16": "97b80ea8a4d85669"
+      "sha256_16": "013d9ffe60fea530"
     },
     "be-en.test.en": {
       "lines": 664,
-      "sha256_16": "7c1f15cb3d3e3bef"
+      "sha256_16": "c29fb220a8e0c267"
     },
     "be-en.test.pos": {
       "lines": 664,
-      "sha256_16": "0de4fdf4def38c25"
+      "sha256_16": "13165ef505226e6c"
     },
     "tr-en.test.tr": {
       "lines": 5029,
-      "sha256_16": "917bec020b4a9a23"
+      "sha256_16": "17feb756bfb88099"
     },
     "tr-en.test.en": {
       "lines": 5029,
-      "sha256_16": "ea43cc3377dc4b3c"
+      "sha256_16": "774e876dabd6bc59"
     },
     "tr-en.test.pos": {
       "lines": 5029,
-      "sha256_16": "3fff2307868a0334"
+      "sha256_16": "bb4f40596c4a469c"
     },
     "uk-en.test.uk": {
       "lines": 3751,
-      "sha256_16": "2515f805dbcae6c6"
+      "sha256_16": "27e84ee677b2002f"
     },
     "uk-en.test.en": {
       "lines": 3751,
-      "sha256_16": "a79b46bf3c9c9c2d"
+      "sha256_16": "14118fa1c579e7e7"
     },
     "uk-en.test.pos": {
       "lines": 3751,
-      "sha256_16": "0f556b635f83b78c"
+      "sha256_16": "8b43a384b2007b36"
     },
     "ru-en.test.ru": {
       "lines": 5483,
-      "sha256_16": "8075db7db8fcd86f"
+      "sha256_16": "82153cdda4d516d2"
     },
     "ru-en.test.en": {
       "lines": 5483,
-      "sha256_16": "b3d650ffb95283dc"
+      "sha256_16": "c54912b24fdbfaa1"
     },
     "ru-en.test.pos": {
       "lines": 5483,
-      "sha256_16": "a5e0939799db3144"
+      "sha256_16": "54912e747bec8b6a"
     },
     "be-uk.test.be": {
       "lines": 272,
-      "sha256_16": "5a37ddff62c2d777"
+      "sha256_16": "37d083a73682a00d"
     },
     "be-uk.test.uk": {
       "lines": 272,
-      "sha256_16": "0d4dac8464581f63"
+      "sha256_16": "0f94b9d42b131127"
     },
     "be-uk.test.pos": {
       "lines": 272,
-      "sha256_16": "8e6d93ce713aa37c"
+      "sha256_16": "fff1eac06afdc3c3"
     },
     "be-ru.test.be": {
       "lines": 546,
-      "sha256_16": "50c88b58d6e8d394"
+      "sha256_16": "3ae670a92f6df8c2"
     },
     "be-ru.test.ru": {
       "lines": 546,
-      "sha256_16": "eb78ebc668e76f68"
+      "sha256_16": "3fd8b8b4c9839288"
     },
     "be-ru.test.pos": {
       "lines": 546,
-      "sha256_16": "4dff967588fa8722"
+      "sha256_16": "6eeeddbaf12948c8"
     },
     "az-tr.test.az": {
       "lines": 811,
-      "sha256_16": "66f1c39f93ce45c6"
+      "sha256_16": "9ebf301b509edbfc"
     },
     "az-tr.test.tr": {
       "lines": 811,
-      "sha256_16": "5bfa898d6336bd5d"
+      "sha256_16": "c66439fcca07ecce"
     },
     "az-tr.test.pos": {
       "lines": 811,
-      "sha256_16": "3d60bda72f510bf7"
+      "sha256_16": "6dce9df95597c5dc"
     },
     "az-be.test.az": {
       "lines": 55,
-      "sha256_16": "291c6d8b3ebbc933"
+      "sha256_16": "c2cf5bfc23123387"
     },
     "az-be.test.be": {
       "lines": 55,
-      "sha256_16": "fdfb3a68376305f9"
+      "sha256_16": "215bc1c78270caa1"
     },
     "az-be.test.pos": {
       "lines": 55,
-      "sha256_16": "ae4124bc0723e190"
+      "sha256_16": "f257f173fac9fd99"
     }
   }
 }
