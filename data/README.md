@@ -84,10 +84,11 @@ python src/preprocessing/verify.py
 
 ### Windows line endings
 
-The current writer can produce CRLF line endings on Windows, while the committed
-reference hashes may describe LF files. Byte hashes then differ even when sentence
-text and alignment are identical. In this checkout, all 81 parallel files matched
-the committed hashes after CRLF-to-LF normalization during verification.
+`align.py` and `prep_data.py` always write LF (`\n`) line endings, so the generated
+files, and their hashes, are the same on every OS; the committed reference describes
+LF files. Files generated on Windows by an earlier version have CRLF line endings, so
+their byte hashes differ even though the sentences and alignment are identical:
+regenerate them with `align.py emit` and `align.py pivot` before verifying.
 
 If reference verification fails, inspect the differences; do not assume every
 mismatch is a line-ending issue or replace the team reference just to pass the

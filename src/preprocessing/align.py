@@ -88,7 +88,7 @@ def extract(langs: list[str] = PROJECT_LANGS, force: bool = False) -> None:
             if p.exists() and not force:
                 print(f"  already exists, skipping {p} (use --force to overwrite)")
                 continue
-            p.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            p.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
             nonempty = sum(1 for x in lines if x.strip())
             print(f"  {split}/{lang}.txt  raw {len(lines):>9,}  non-empty {nonempty:>9,}")
 
@@ -163,15 +163,16 @@ def emit(pairs_to_emit, splits, out_dir: Path) -> None:
             stem = f"{a}-{b}.{split}"
             for col, name in ((1, a), (2, b)):
                 p = out_dir / f"{stem}.{name}"
-                p.write_text("\n".join(r[col] for r in rows) + "\n", encoding="utf-8")
+                # newline="\n": the same bytes on every OS, so the hashes hold on Windows too
+                p.write_text("\n".join(r[col] for r in rows) + "\n", encoding="utf-8", newline="\n")
                 manifest["files"][p.name] = {"lines": len(rows), "sha256_16": _sha(p)}
             # store the position numbers separately: pivot / three-way stitching needs them
             pi = out_dir / f"{stem}.pos"
-            pi.write_text("\n".join(str(r[0]) for r in rows) + "\n", encoding="utf-8")
+            pi.write_text("\n".join(str(r[0]) for r in rows) + "\n", encoding="utf-8", newline="\n")
             manifest["files"][pi.name] = {"lines": len(rows), "sha256_16": _sha(pi)}
             print(f"  {stem}: {len(rows):,} sentences")
     (out_dir / "manifest.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n"
     )
     print(f"\n→ {out_dir}/manifest.json")
 
@@ -185,7 +186,7 @@ def emit_pivots(out_dir: Path, splits=("train", "dev", "test")) -> None:
                 print(f"  skipping {'-'.join(langs)}.{split} (0 sentences)")
                 continue
             p = out_dir / f"{'-'.join(langs)}.{split}.tsv"
-            with open(p, "w", encoding="utf-8") as f:
+            with open(p, "w", encoding="utf-8", newline="\n") as f:
                 f.write("pos\t" + "\t".join(langs) + "\n")
                 for r in rows:
                     f.write("\t".join(str(x) for x in r) + "\n")
