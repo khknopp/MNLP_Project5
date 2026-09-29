@@ -117,9 +117,21 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(metric.predict.call_count, 4)
         examples = metric.predict.call_args.args[0]
         self.assertEqual(examples[0], {"src": "This is a complete sentence.", "mt": "This is a complete sentence.", "ref": "This is a complete sentence."})
-        self.assertEqual(metric.predict.call_args.kwargs, {"batch_size": 2, "gpus": 0})
+        self.assertEqual(metric.predict.call_args.kwargs, {"batch_size": 2, "gpus": 0, "num_workers": evaluation._default_num_workers()})
         self.assertEqual(results["en-be"]["sentence_scores"], [0.8, 0.4])
         json.dumps(results)
+
+    def test_default_num_workers_is_zero_on_windows_else_one(self):
+        with patch.object(os, "name", "nt"):
+            self.assertEqual(evaluation._default_num_workers(), 0)
+        with patch.object(os, "name", "posix"):
+            self.assertEqual(evaluation._default_num_workers(), 1)
+
+    def test_explicit_num_workers_is_forwarded_to_comet(self):
+        metric = Mock()
+        metric.predict.return_value = SimpleNamespace(system_score=0.6, scores=[0.8, 0.4])
+        evaluation.evaluate_direction(self.folder, "en-be", "comet", metric=metric, num_workers=4)
+        self.assertEqual(metric.predict.call_args.kwargs["num_workers"], 4)
         with patch.object(evaluation, "load_metric") as loader:
             evaluation.evaluate_all_directions(self.folder, "comet", metric=metric)
             loader.assert_not_called()

@@ -5,12 +5,25 @@ Import evaluate_direction or evaluate_all_directions into a notebook to score
 translations and return results for tables, comparisons and plots.
 """
 
+import os
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
 DIRECTIONS = ("az-en", "en-az", "be-en", "en-be")
 COMET_MODEL = "Unbabel/wmt22-comet-da"
+
+
+def _default_num_workers():
+    """0 on Windows (comet's own recommendation); 1 elsewhere.
+
+    comet's own default (`num_workers=None` -> 0 on any non-GPU call) hits a torch
+    DataLoader bug on any Mac with MPS: comet sets `multiprocessing_context="fork"`
+    whenever MPS is available, and torch raises `ValueError` for that combined with
+    `num_workers=0`, regardless of torch version. Passing a nonzero num_workers
+    explicitly skips comet's buggy default and sidesteps the crash.
+    """
+    return 0 if os.name == "nt" else 1
 
 
 def _validate_metric(metric_name):
@@ -167,6 +180,7 @@ def _score_translations(
     metric,
     batch_size,
     gpus,
+    num_workers,
 ):
     """Calculate scores using already validated texts and a loaded metric.
 
@@ -180,6 +194,7 @@ def _score_translations(
             for BLEU and chrF.
         gpus (int): GPUs to use for COMET; 0 selects CPU. Ignored for
             BLEU and chrF.
+        num_workers (int): DataLoader workers for COMET. Ignored for BLEU and chrF.
 
     Returns:
         dict: 'direction', 'metric', 'n_sentences' and 'score' describe
@@ -212,6 +227,7 @@ def _score_translations(
             examples,
             batch_size=batch_size,
             gpus=gpus,
+            num_workers=num_workers,
         )
 
         result["score"] = float(prediction.system_score)
@@ -234,6 +250,7 @@ def evaluate_direction(
     metric=None,
     batch_size=8,
     gpus=0,
+    num_workers=None,
 ):
     """Read and evaluate one translation direction.
 
@@ -251,6 +268,8 @@ def evaluate_direction(
             ignored for BLEU and chrF.
         gpus (int): GPUs for COMET. Defaults to 0 (CPU); use 1 for one
             GPU. Ignored for BLEU and chrF.
+        num_workers (int, optional): DataLoader workers for COMET. Defaults
+            to `_default_num_workers()`. Ignored for BLEU and chrF.
 
     Returns:
         dict: Contains 'direction', 'metric', 'n_sentences' and 'score'.
@@ -282,6 +301,7 @@ def evaluate_direction(
         metric=metric,
         batch_size=batch_size,
         gpus=gpus,
+        num_workers=_default_num_workers() if num_workers is None else num_workers,
     )
 
 
@@ -292,6 +312,7 @@ def evaluate_all_directions(
     directions=DIRECTIONS,
     batch_size=8,
     gpus=0,
+    num_workers=None,
 ):
     """Evaluate multiple directions from one system's translation folder.
 
@@ -311,6 +332,8 @@ def evaluate_all_directions(
             ignored for BLEU and chrF.
         gpus (int): GPUs for COMET. Defaults to 0 (CPU); use 1 for one
             GPU. Ignored for BLEU and chrF.
+        num_workers (int, optional): DataLoader workers for COMET. Defaults
+            to `_default_num_workers()`. Ignored for BLEU and chrF.
 
     Returns:
         dict[str, dict]: Results keyed by direction. Each result contains
@@ -362,6 +385,7 @@ def evaluate_all_directions(
             metric=metric,
             batch_size=batch_size,
             gpus=gpus,
+            num_workers=_default_num_workers() if num_workers is None else num_workers,
         )
 
     return results

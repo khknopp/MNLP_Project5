@@ -6,10 +6,11 @@ torch
 pytest
 matplotlib
 datasets
-sacrebleu      # BLEU and chrF evaluation
-unbabel-comet  # COMET evaluation (imported as comet)
-transformers   # NLLBModel (src/model.py)
-sentencepiece  # NLLB's tokenizer
+sacrebleu       # BLEU and chrF evaluation
+unbabel-comet   # COMET evaluation (imported as comet)
+setuptools<81   # >=81 dropped pkg_resources, which comet's torchmetrics dependency still imports
+transformers    # NLLBModel (src/model.py)
+sentencepiece   # NLLB's tokenizer
 
 # ---- WP0 preprocessing ----
 # Pinned to the exact version the published C1-C5 numbers came from.

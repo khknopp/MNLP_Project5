@@ -2,7 +2,11 @@
 name = "wp0-preprocessing"
 version = "0.1.0"
 description = "WP0: what a jointly learned subword vocabulary costs a low-resource language, and whether it can be recovered"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
+# Capped below 3.13: `import comet` (unbabel-comet) breaks on newer CPython with no
+# warning from pip — 3.14 removes functools internals (_HashedSeq) its lru-cache shim
+# needs, 3.13 no longer bundles pkg_resources that torchmetrics imports unconditionally.
+# .python-version pins 3.12.11 so every teammate's `comet` import behaves the same way.
 # Pinned to the exact version that produced the published C1-C5 numbers.
 #
 # Why pin an exact version instead of >=: vocabulary training is NOT covered by
@@ -16,10 +20,11 @@ dependencies = [
     "pytest",
     "matplotlib",
     "datasets",
-    "sacrebleu",      # BLEU and chrF evaluation
-    "unbabel-comet",  # COMET evaluation (imported as comet)
-    "transformers",   # NLLBModel (src/model.py)
-    "sentencepiece",  # NLLB's tokenizer
+    "sacrebleu",       # BLEU and chrF evaluation
+    "unbabel-comet",   # COMET evaluation (imported as comet)
+    "setuptools<81",   # >=81 dropped pkg_resources, which comet's torchmetrics dependency still imports
+    "transformers",    # NLLBModel (src/model.py)
+    "sentencepiece",   # NLLB's tokenizer
     # WP0 preprocessing — see requirements.txt for why this one is pinned exactly
     "tokenizers==0.22.2",
 ]
