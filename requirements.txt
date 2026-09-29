@@ -8,6 +8,8 @@ matplotlib
 datasets
 sacrebleu      # BLEU and chrF evaluation
 unbabel-comet  # COMET evaluation (imported as comet)
+transformers   # NLLBModel (src/model.py)
+sentencepiece  # NLLB's tokenizer
 
 # ---- WP0 preprocessing ----
 # Pinned to the exact version the published C1-C5 numbers came from.

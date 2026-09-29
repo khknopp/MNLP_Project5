@@ -18,6 +18,8 @@ dependencies = [
     "datasets",
     "sacrebleu",      # BLEU and chrF evaluation
     "unbabel-comet",  # COMET evaluation (imported as comet)
+    "transformers",   # NLLBModel (src/model.py)
+    "sentencepiece",  # NLLB's tokenizer
     # WP0 preprocessing — see requirements.txt for why this one is pinned exactly
     "tokenizers==0.22.2",
 ]

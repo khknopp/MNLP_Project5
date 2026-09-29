@@ -1,4 +1,6 @@
 import random
+from pathlib import Path
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -34,7 +36,7 @@ class Model(nn.Module):
         raise NotImplementedError
 
 class Seq2SeqModel(Model):
-    def __init__(self, src_vocab, tgt_vocab, embedding_dim=256, hidden_dim=512):
+    def __init__(self, src_vocab, tgt_vocab, embedding_dim=256, hidden_dim=512, **kwargs):
         super().__init__()
         self.src_vocab = src_vocab
         self.tgt_vocab = tgt_vocab
@@ -68,7 +70,7 @@ class Seq2SeqModel(Model):
                 optimizer.step()
                 total_loss += loss.item()
 
-    def predict(self, src_sentence, max_length=20):
+    def predict(self, src_sentence, max_length=20, verbose=True):
         self.eval()
         with torch.no_grad():
             src_ids = torch.tensor(self.src_vocab.encode_sentence(src_sentence) + [self.src_vocab.w2i[END]]).unsqueeze(0)
@@ -76,7 +78,7 @@ class Seq2SeqModel(Model):
 
             tgt_ids = [self.tgt_vocab.w2i[START]]
             decoder_input = torch.tensor([[self.tgt_vocab.w2i[START]]])
-            for _ in tqdm(range(max_length)):
+            for _ in tqdm(range(max_length), disable=not verbose):
                 output, (hidden, cell) = self.decoder(self.tgt_embedding(decoder_input), (hidden, cell))
                 next_token_logits = self.fc(output[:, -1, :])
                 next_token_id = torch.argmax(next_token_logits, dim=-1).item()
@@ -86,3 +88,55 @@ class Seq2SeqModel(Model):
                 decoder_input = torch.tensor(tgt_ids).unsqueeze(0)
 
         return self.tgt_vocab.decode_sentence(tgt_ids[1:])
+
+class CopyModel(Model):
+    def __init__(self, src_vocab, tgt_vocab, **kwargs):
+        super().__init__()
+        self.src_vocab = src_vocab
+        self.tgt_vocab = tgt_vocab
+
+    def fit(self, pairs, **kwargs):
+        pass
+
+    def predict(self, src_sentence, max_length=20, verbose=True):
+        return src_sentence
+
+NLLB_CODES = {"en": "eng_Latn", "az": "azj_Latn", "be": "bel_Cyrl",
+              "tr": "tur_Latn", "uk": "ukr_Cyrl", "ru": "rus_Cyrl"}
+
+class NLLBModel(Model):
+    def __init__(self, src_vocab=None, tgt_vocab=None, src_lang="en", tgt_lang="az",
+                 model_name="facebook/nllb-200-distilled-600M", beams=5, **kwargs):
+        super().__init__()
+        from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.hf_model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+        self.src_lang = NLLB_CODES.get(src_lang, src_lang)
+        self.tgt_lang = NLLB_CODES.get(tgt_lang, tgt_lang)
+        self.beams = beams
+
+    def fit(self, pairs, **kwargs):
+        pass
+
+    def predict(self, src_sentence, max_length=128, verbose=True):
+        self.hf_model.eval()
+        self.tokenizer.src_lang = self.src_lang
+        bos = self.tokenizer.convert_tokens_to_ids(self.tgt_lang)
+        enc = self.tokenizer([src_sentence], return_tensors="pt", truncation=True, max_length=max_length)
+        with torch.no_grad():
+            gen = self.hf_model.generate(**enc, forced_bos_token_id=bos, num_beams=self.beams, max_new_tokens=max_length)
+        return self.tokenizer.batch_decode(gen, skip_special_tokens=True)[0]
+
+MODELS = {"seq2seq": Seq2SeqModel, "copy": CopyModel, "nllb": NLLBModel}
+
+def build_model(name, src_vocab, tgt_vocab, **kwargs):
+    return MODELS[name](src_vocab, tgt_vocab, **kwargs)
+
+def translate_corpus(model, sources, max_length=20):
+    return [model.predict(src, max_length=max_length, verbose=False) for src in tqdm(sources)]
+
+def save_translations(out_dir, direction, sources, references, hypotheses):
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for ext, lines in (("src", sources), ("ref", references), ("hyp", hypotheses)):
+        (out_dir / f"{direction}.{ext}").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
