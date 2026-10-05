@@ -51,9 +51,10 @@ class Seq2SeqModel(Model):
         outputs, _ = self.decoder(self.tgt_embedding(tgt), (hidden, cell))
         return self.fc(outputs)
 
-    def fit(self, pairs, epochs=10, learning_rate=0.001):
+    def fit(self, pairs, epochs=10, learning_rate=0.001, device="cpu"):
         optimizer = optim.Adam(self.parameters(), lr=learning_rate)
         criterion = nn.CrossEntropyLoss(ignore_index=0)
+        self.to(device)
 
         for _ in tqdm(range(epochs)):
             random.shuffle(pairs)
@@ -61,6 +62,9 @@ class Seq2SeqModel(Model):
             for src_sentence, tgt_sentence in pairs:
                 src_ids = torch.tensor(self.src_vocab.encode_sentence(src_sentence) + [self.src_vocab.w2i[END]]).unsqueeze(0)
                 tgt_ids = torch.tensor([self.tgt_vocab.w2i[START]] + self.tgt_vocab.encode_sentence(tgt_sentence) + [self.tgt_vocab.w2i[END]]).unsqueeze(0)
+
+                src_ids = src_ids.to(device)
+                tgt_ids = tgt_ids.to(device)
 
                 optimizer.zero_grad()
                 output = self.forward(src_ids, tgt_ids[:, :-1])
@@ -70,16 +74,24 @@ class Seq2SeqModel(Model):
                 optimizer.step()
                 total_loss += loss.item()
 
-    def predict(self, src_sentence, max_length=20, verbose=True):
+    def predict(self, src_sentence, max_length=20, verbose=True, device="cpu"):
         self.eval()
         with torch.no_grad():
+
             src_ids = torch.tensor(self.src_vocab.encode_sentence(src_sentence) + [self.src_vocab.w2i[END]]).unsqueeze(0)
-            _, (hidden, cell) = self.encoder(self.src_embedding(src_ids))
+            src_ids = src_ids.to(device)
+
+            src_embedding = self.src_embedding.to(device)
+            tgt_embedding = self.tgt_embedding.to(device)
+
+            _, (hidden, cell) = self.encoder(src_embedding(src_ids))
 
             tgt_ids = [self.tgt_vocab.w2i[START]]
             decoder_input = torch.tensor([[self.tgt_vocab.w2i[START]]])
+
             for _ in tqdm(range(max_length), disable=not verbose):
-                output, (hidden, cell) = self.decoder(self.tgt_embedding(decoder_input), (hidden, cell))
+                decoder_input = decoder_input.to(device)
+                output, (hidden, cell) = self.decoder(tgt_embedding(decoder_input), (hidden, cell))
                 next_token_logits = self.fc(output[:, -1, :])
                 next_token_id = torch.argmax(next_token_logits, dim=-1).item()
                 if next_token_id == self.tgt_vocab.w2i[END]:
@@ -132,8 +144,8 @@ MODELS = {"seq2seq": Seq2SeqModel, "copy": CopyModel, "nllb": NLLBModel}
 def build_model(name, src_vocab, tgt_vocab, **kwargs):
     return MODELS[name](src_vocab, tgt_vocab, **kwargs)
 
-def translate_corpus(model, sources, max_length=20):
-    return [model.predict(src, max_length=max_length, verbose=False) for src in tqdm(sources)]
+def translate_corpus(model, sources, max_length=20, device="cpu"):
+    return [model.predict(src, max_length=max_length, verbose=False, device=device) for src in tqdm(sources)]
 
 def save_translations(out_dir, direction, sources, references, hypotheses):
     out_dir = Path(out_dir)
