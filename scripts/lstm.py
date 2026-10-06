@@ -1,5 +1,6 @@
 import argparse
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -16,13 +17,17 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--name", required=True)
 parser.add_argument("--directions", nargs="+", required=True)
 parser.add_argument("--pivot")
+parser.add_argument("--seed", type=int, default=42)
 parser.add_argument("--epochs", type=int, default=10)
 parser.add_argument("--max-length", type=int, default=20)
 args = parser.parse_args()
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-out_dir = ROOT / "results" / "translations" / args.name
-metrics_dir = ROOT / "results" / "metrics" / args.name
+random.seed(args.seed)
+torch.manual_seed(args.seed)
+run = f"{args.name}_s{args.seed}"
+out_dir = ROOT / "results" / "translations" / run
+metrics_dir = ROOT / "results" / "metrics" / run
 metrics_dir.mkdir(parents=True, exist_ok=True)
 
 
@@ -47,7 +52,7 @@ for direction in args.directions:
     else:
         hyps = translate(train(src, tgt), sources)
     save_translations(out_dir, direction, sources, [t for _, t in test], hyps)
-    scores[direction] = {m: evaluate_direction(out_dir, direction, m, gpus=int(device == "cuda"))["score"] for m in ("bleu", "chrf", "comet")}
+    scores[direction] = {m: evaluate_direction(out_dir, direction, m, gpus=int(device == "cuda")) for m in ("bleu", "chrf", "comet")}
+    json.dump({"args": vars(args), "scores": scores}, open(metrics_dir / "scores.json", "w"), indent=2)
 
-json.dump({"args": vars(args), "scores": scores}, open(metrics_dir / "scores.json", "w"), indent=2)
-print(json.dumps(scores, indent=2))
+print(json.dumps({d: {m: r["score"] for m, r in v.items()} for d, v in scores.items()}, indent=2))

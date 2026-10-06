@@ -7,4 +7,4 @@
 #SBATCH --time=12:00:00
 
 cd "${SLURM_SUBMIT_DIR}"
-uv run python scripts/nllb.py --name ${NAME} --helpers ${HELPERS} --alpha ${ALPHA:-0.2}
+uv run python scripts/nllb.py --name ${NAME} --helpers ${HELPERS} --alpha ${ALPHA:-0.2} --seed ${SEED}

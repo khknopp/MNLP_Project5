@@ -7,4 +7,4 @@
 #SBATCH --time=12:00:00
 
 cd "${SLURM_SUBMIT_DIR}"
-uv run python scripts/lstm.py --name lstm_direct --directions az-en en-az be-en en-be
+uv run python scripts/lstm.py --name lstm_direct --directions az-en en-az be-en en-be --seed ${SEED}

@@ -28,12 +28,15 @@ args = parser.parse_args()
 
 MAX_LEN, BEAMS, BATCH, ACCUM = 128, 5, 16, 2
 BF16 = torch.cuda.get_device_capability(0)[0] >= 8
-CKPT_DIR = ROOT / "artifacts" / "checkpoints" / args.name
-OUT_DIR = ROOT / "results" / "translations" / args.name
-METRICS_DIR = ROOT / "results" / "metrics" / args.name
+RUN = f"{args.name}_s{args.seed}"
+CKPT_DIR = ROOT / "artifacts" / "checkpoints" / RUN
+OUT_DIR = ROOT / "results" / "translations" / RUN
+METRICS_DIR = ROOT / "results" / "metrics" / RUN
 METRICS_DIR.mkdir(parents=True, exist_ok=True)
 
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, set_seed
+
+set_seed(args.seed)
 
 tok = AutoTokenizer.from_pretrained(args.model)
 ted = TedData()
@@ -108,6 +111,6 @@ for direction in DIRECTIONS:
 
 scores = {}
 for direction in DIRECTIONS:
-    scores[direction] = {m: evaluate_direction(OUT_DIR, direction, m, gpus=1)["score"] for m in ("bleu", "chrf", "comet")}
-json.dump({"args": vars(args), "scores": scores}, open(METRICS_DIR / "scores.json", "w"), indent=2)
-print(json.dumps(scores, indent=2))
+    scores[direction] = {m: evaluate_direction(OUT_DIR, direction, m, gpus=1) for m in ("bleu", "chrf", "comet")}
+    json.dump({"args": vars(args), "scores": scores}, open(METRICS_DIR / "scores.json", "w"), indent=2)
+print(json.dumps({d: {m: r["score"] for m, r in v.items()} for d, v in scores.items()}, indent=2))

@@ -7,4 +7,4 @@
 #SBATCH --time=04:00:00
 
 cd "${SLURM_SUBMIT_DIR}"
-uv run python scripts/nllb.py --name nllb_pivot_${PIVOT} --pivot ${PIVOT}
+uv run python scripts/nllb.py --name nllb_pivot_${PIVOT} --pivot ${PIVOT} --seed ${SEED}
