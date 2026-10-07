@@ -119,3 +119,18 @@ class CorpusHelpersTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AttentionSeq2SeqTests(unittest.TestCase):
+    def test_learns_a_tiny_corpus_and_translates(self):
+        import random
+
+        import torch
+
+        from src.model import AttentionSeq2Seq
+        random.seed(0)
+        torch.manual_seed(0)
+        pairs = [("a b c", "x y z"), ("c b a", "z y x"), ("a a b", "x x y"), ("b c c", "y z z")] * 8
+        model = AttentionSeq2Seq.from_pairs(pairs, vocab_size=20, embedding_dim=32, hidden_dim=32, dropout=0.0)
+        model.fit(pairs, dev_pairs=pairs[:4], epochs=30, learning_rate=5e-3, batch_size=8, verbose=False)
+        self.assertEqual(model.predict("a b c", max_length=10, verbose=False), "x y z")
