@@ -37,3 +37,4 @@ venv/
 # Local project files
 /MNLP - Project Plan.docx
 /logs/
+.cache/
