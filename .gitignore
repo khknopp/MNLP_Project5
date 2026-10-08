@@ -17,6 +17,8 @@
 /results/figures/*
 /results/metrics/*
 /results/translations/*
+# Saved copies of results (contain TED text, so never committed).
+/results_*/
 
 # Legacy output locations still used by older scripts/notebooks.
 /out/

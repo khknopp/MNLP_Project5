@@ -1,0 +1,26 @@
+#!/bin/bash
+# COMET for all RQ1 runs on Snellius, from the saved translations (no retraining). Submit from the repo root:
+#
+#     sbatch scripts/snellius/comet.job
+#
+# Needs the COMET model in the cache first (compute nodes run offline). Once, on a login node:
+#     python -c "from src.evaluation import load_metric; load_metric('comet')"
+# Log: logs/comet_<job>.out
+#SBATCH --job-name=comet
+#SBATCH --partition=gpu_h100
+#SBATCH --gpus=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=01:00:00
+#SBATCH --output=logs/comet_%j.out
+
+set -euo pipefail
+module purge
+module load 2024
+module load Python/3.12.3-GCCcore-13.3.0
+source .venv/bin/activate
+
+export HF_HUB_OFFLINE=1          # COMET model + xlm-roberta-large were cached on the login node
+
+echo "node=$(hostname) start=$(date)"
+python scripts/comet_rq1.py
+echo "end=$(date)"
