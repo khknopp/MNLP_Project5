@@ -9,4 +9,4 @@
 #SBATCH --time=24:00:00
 
 source slurm/env.sh
-uv run python scripts/lstm.py --name lstm_pivot_${PIVOT} --pivot ${PIVOT} --directions az-en en-az be-en en-be --seed ${SEED}
+uv run python scripts/lstm.py --name lstm_pivot_${PIVOT} --pivot ${PIVOT} --directions az-en en-az be-en en-be --seed ${SEED} "$@"

@@ -21,6 +21,7 @@ parser.add_argument("--seed", type=int, default=42)
 parser.add_argument("--arch", choices=["attn", "basic"], default="attn")
 parser.add_argument("--epochs", type=int, default=None)
 parser.add_argument("--max-length", type=int, default=None)
+parser.add_argument("--max-pairs", type=int, default=0, help="cap the training pairs per model (0 = all); useful for the huge pivot corpora")
 parser.add_argument("--vocab-size", type=int, default=4000)
 args = parser.parse_args()
 args.epochs = args.epochs or (50 if args.arch == "attn" else 10)
@@ -35,8 +36,21 @@ metrics_dir = ROOT / "results" / "metrics" / run
 metrics_dir.mkdir(parents=True, exist_ok=True)
 
 
+_models = {}
+
+
 def train(src, tgt):
+    # a pivot run needs the same model for several directions (e.g. tr-en for both az-en and be-en): train it once
+    if (src, tgt) not in _models:
+        _models[(src, tgt)] = _train(src, tgt)
+    return _models[(src, tgt)]
+
+
+def _train(src, tgt):
     train_pairs = get_language_data_aligned("train", src, tgt)
+    if args.max_pairs and len(train_pairs) > args.max_pairs:
+        train_pairs = random.Random(args.seed).sample(train_pairs, args.max_pairs)
+    print(f"training {src}-{tgt} on {len(train_pairs)} pairs", flush=True)
     if args.arch == "attn":
         model = AttentionSeq2Seq.from_pairs(train_pairs, vocab_size=args.vocab_size)
         model.fit(pairs=train_pairs, dev_pairs=get_language_data_aligned("dev", src, tgt), epochs=args.epochs, device=device)
